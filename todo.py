@@ -199,6 +199,8 @@ def filter_active(tasks: list) -> list:
     
     _tasks = []
     for task in tasks:
+        if task == "":
+            continue
         if task[0] != 'x':
             _tasks.append(task)
 
@@ -210,6 +212,8 @@ def filter_closed(tasks: list) -> list:
     
     _tasks = []
     for task in tasks:
+        if task == "":
+            continue
         if task[0] == 'x':
             _tasks.append(task)
 
