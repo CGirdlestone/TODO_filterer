@@ -60,9 +60,9 @@ def __get_priority(priority: str, task_list: list) -> list:
         if task[0] != 'x':
             if task[0:3] == priority:
                 _tasks.append(task.strip('\n'))
-            elif task[0] == 'x':
-                if task[2:5] == priority:
-                    _tasks.append(task.strip('\n'))
+        elif task[0] == 'x':
+            if task[2:5] == priority:
+                _tasks.append(task.strip('\n'))
     return _tasks
 
 
@@ -298,13 +298,21 @@ def repl(file: str) -> None:
             if len(args) == 1:
                 tasks = get_all_tasks(file)
             elif len(args) == 2:
-                if args[1] == "-all":
-                    show_all = True
-                    args = [args[0]] + args[2::]
+                if args[1] == "-all" or args[1] == "-closed":
+                    tasks = get_all_tasks(file)
+                    if args[1] == "-all":
+                        show_all = True
+                    elif args[1] == "-closed":
+                        show_closed = True
 
-                if args[1] == "-closed":
-                    show_closed = True
-                    args = [args[0]] + args[2::]
+                    if (show_closed):
+                        tasks = filter_closed(tasks)
+                        print_tasks(tasks)
+                        continue
+
+                    if (show_all):
+                        print_tasks(tasks)
+                        continue
                 
                 if args[1][0] == '+':
                     if (len(args[1]) == 1):
@@ -355,15 +363,14 @@ def repl(file: str) -> None:
                 if priority_count > 1:
                     priority_error()
                     continue
-
-                if args[1] == "-all":
-                    show_all = True
-                    args = [args[0]] + args[2::]
-
-                if args[1] == "-closed":
-                    show_closed = True
-                    args = [args[0]] + args[2::]
                 
+                if args[1] == "-all" or args[1] == "-closed":
+                    if args[1] == "-all":
+                        show_all = True
+                    elif args[1] == "-closed":
+                        show_closed = True
+                    args = [args[0]] + args[2::]
+
                 if args[1][0] == '+':
                     if (len(args[1]) == 1):
                         arg_syntax_error(args[1], args[2])
